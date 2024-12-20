@@ -14,6 +14,7 @@ use crate::{
     DbReader,
 };
 use anyhow::Result;
+use aptos_crypto::hash::CryptoHash;
 use aptos_metrics_core::TimerHelper;
 use aptos_types::{
     state_store::{
@@ -211,6 +212,10 @@ impl CachedStateView {
             // found in speculative state, can be either a new value or a deletion
             update.to_state_value_with_version()
         } else if let Some(base_version) = self.base_version() {
+            if let Some(proof_fetcher) = self.proof_fetcher.as_ref() {
+                // FIXME(aldenhu): doc
+                proof_fetcher.schedule_get_proof_once(state_key.hash(), 0);
+            }
             StateCacheEntry::from_tuple_opt(
                 self.reader
                     .get_state_value_with_version_by_version(state_key, base_version)?,

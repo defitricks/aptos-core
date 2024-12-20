@@ -700,6 +700,11 @@ impl GlobalEnv {
         self.address_alias_map = map
     }
 
+    /// Gets the global address alias map
+    pub fn get_address_alias_map(&self) -> &BTreeMap<Symbol, AccountAddress> {
+        &self.address_alias_map
+    }
+
     /// Indicates that all modules in the environment should be treated as
     /// target modules, i.e. `module.is_target()` returns true. This can be
     /// used to temporarily override the default which distinguishes
@@ -879,6 +884,17 @@ impl GlobalEnv {
         let mut target_modules: Vec<ModuleEnv> = vec![];
         for module_env in self.get_modules() {
             if module_env.is_target() {
+                target_modules.push(module_env);
+            }
+        }
+        target_modules
+    }
+
+    /// Find all primary target modules and return in a vector
+    pub fn get_primary_target_modules(&self) -> Vec<ModuleEnv> {
+        let mut target_modules: Vec<ModuleEnv> = vec![];
+        for module_env in self.get_modules() {
+            if module_env.is_primary_target() {
                 target_modules.push(module_env);
             }
         }

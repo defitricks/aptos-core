@@ -104,12 +104,13 @@ impl CachedStateView {
     /// speculative state represented by `speculative_state`. The persistent state view is the
     /// latest one preceding `next_version`
     pub fn new(id: StateViewId, reader: Arc<dyn DbReader>, state: State) -> StateViewResult<Self> {
-        let persisted_state = reader.get_persisted_state()?;
-        let proof_fetcher = StateProofFetcher::new_persisted(reader.clone())?;
+        let persisted = reader.get_persisted_state_with_summary()?;
+
+        let proof_fetcher = StateProofFetcher::new(persisted.summary().clone(), reader.clone());
         Ok(Self::new_impl(
             id,
             reader,
-            persisted_state,
+            persisted.state().clone(),
             state,
             Some(proof_fetcher),
         ))

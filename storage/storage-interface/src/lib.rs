@@ -46,7 +46,9 @@ pub mod utils;
 
 use crate::{
     chunk_to_commit::ChunkToCommit,
-    state_store::{state::State, state_summary::StateSummary},
+    state_store::{
+        state::State, state_summary::StateSummary, state_with_summary::StateWithSummary,
+    },
 };
 pub use aptos_types::block_info::BlockHeight;
 use aptos_types::state_store::state_key::prefix::StateKeyPrefix;
@@ -384,6 +386,8 @@ pub trait DbReader: Send + Sync {
         fn get_persisted_state(&self) -> Result<State>;
 
         fn get_persisted_state_summary(&self) -> Result<StateSummary>;
+
+        fn get_persisted_state_with_summary(&self) -> Result<StateWithSummary>;
 
         /// Get the ledger info of the epoch that `known_version` belongs to.
         fn get_epoch_ending_ledger_info(

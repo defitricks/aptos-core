@@ -3,6 +3,7 @@
 
 use aptos_storage_interface::state_store::state::State;
 use aptos_storage_interface::state_store::state_summary::StateSummary;
+use aptos_storage_interface::state_store::state_with_summary::StateWithSummary;
 use aptos_types::block_info::BlockHeight;
 
 impl DbReader for AptosDB {
@@ -15,6 +16,12 @@ impl DbReader for AptosDB {
     fn get_persisted_state_summary(&self) -> Result<StateSummary> {
         gauged_api("get_persisted_state_summary", || {
             self.state_store.get_persisted_state_summary()
+        })
+    }
+
+    fn get_persisted_state_with_summary(&self) -> Result<StateWithSummary> {
+        gauged_api("get_persisted_state_with_summary", || {
+            Ok(self.state_store.persisted_state_locked().clone())
         })
     }
 

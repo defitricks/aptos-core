@@ -47,7 +47,7 @@ impl Signature {
 
     /// Deserialize an P256Signature, without checking for malleability
     /// Uses the SEC1 serialization format.
-    #[cfg(any(test, feature = "fuzzing"))]
+    #[cfg(feature = "fuzzing")]
     pub fn from_bytes_unchecked(
         bytes: &[u8],
     ) -> std::result::Result<Signature, CryptoMaterialError> {
